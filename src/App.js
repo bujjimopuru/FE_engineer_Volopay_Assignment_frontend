@@ -2,7 +2,7 @@ import Cards from './components/Cards';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import './App.css';
 
-function App() {
+const App=()=> {
   return (
     <Router>
       <div className="App">
