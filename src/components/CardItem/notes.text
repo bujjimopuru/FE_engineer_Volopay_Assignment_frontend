@@ -1,0 +1,101 @@
+import React, {useEffect, useState} from 'react';
+import Modal from '../Modal/index'
+import './index.css'
+
+const Cards=()=> {
+    useEffect( () => {
+        fetchItems();
+    }, []);
+
+    const [items, setItems] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const fetchItems = async () => {
+        const data = await fetch('/cards');
+        const items = await data.json();
+        setItems(items)
+    }
+ 
+    const getBlockedCards=()=>{
+        setItems(items)
+    }
+    const getAllCards=()=>{
+        setItems(items)
+    }
+
+    return(
+        <section>
+        <div className='card-hd'>
+        <div className='logo-hd'>
+        <h1 className='Heading'>Virtual Cards</h1>
+        <img src="https://i.ibb.co/sq3Q4qW/video-Icon.png" className='logo' alt='videoicon'/>
+        
+        <h6 className='learn-hd'>Learn More</h6>
+        </div>
+        <button className='addcard'>+ Virtual Card</button>
+        </div>
+        <div className='tot-cards'>
+        <div className='btn-cards'>
+        <button className='button'>Your</button>
+        <button  className="button" onClick={getAllCards}>All</button>
+        <button className='button' onClick={getBlockedCards}>Blocked</button>
+        </div>
+        <div className='images-logo'>
+        <img className='logo1' src="https://i.ibb.co/4NT8CT9/menu-dot.jpg" alt="menudot"/>
+        <img className='logo1' src="https://i.ibb.co/HD3L0db/menu-icon.png" alt='menubar'/>
+        </div>
+        </div>
+        <hr/>
+        <div className='filter-card'>
+        <img src="https://i.ibb.co/xCn7sQC/search-logo.jpg" className='logo1 logo2' alt='search'/>
+        <div className='filters openModalBtn'
+        onClick={() => {
+          setModalOpen(true);
+        }}>
+        <img className='logo1' src="https://i.ibb.co/mHP9Wqb/filter.jpg" alt='filter' />
+        <span>Filter</span>
+        </div>
+        {modalOpen && <Modal setOpenModal={setModalOpen} />}
+        </div>
+            {
+            items.map(item => (
+                <div class="container-fluid p-3 w-50">
+                    <div class="card-deck">
+                        <div class="card">
+                            <div class="card-body p-1">
+                                <h6 class="card-title card-heading">{item.name}</h6>
+                                <div className='name-url'>
+                                <p class="card-text">{item.user_name}: {item.budget_name}</p>
+                                <img className='logo' src={item.spent.imgUrl} alt="fire"/>
+                                </div>
+                                <div className='cardexpiry'>
+                                <button class="card-text card-type"><i>{item.card_type}</i></button>
+                                <p class="card-text"><i>{item.expiry} limit {item.limit} {item.spent.currency}</i></p>
+                                </div>
+                                <hr className='line' style={{color: "red",border:"solid 1px green",borderRadius:"20px",
+                                marginLeft:"20px",marginRight:"20px",height:"5px",
+                                background:`linear-gradient(90deg,green ${(item.available_to_spend.value)/(item.limit)*100}%,red ${(item.spent.value)/(item.limit)*100}%)`}}/>
+                                <div className='spentvalue'>
+                                <div className='spent'>
+                                <div className='circle'></div>
+                                <p>Spent</p>
+                                </div>
+                                <p class="card-text"><i>{item.spent.value} {item.spent.currency}</i></p>
+                                </div>
+                                <div className='availablevalue'>
+                                <div className='available'>
+                                <div className='circle1'></div>
+                                <p>Available to spend</p>
+                                </div>
+                                <p class="card-text"><i>{item.available_to_spend.value} {item.available_to_spend.currency}</i></p>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ))
+            }
+        </section>
+    );
+}
+
+export default Cards;
